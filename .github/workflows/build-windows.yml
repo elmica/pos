@@ -30,9 +30,9 @@ jobs:
       - run: pnpm install
 
       - name: Install bun
-      - run: |
-        curl -fsSL https://bun.sh/install | bash
-        echo "$HOME/.bun/bin" >> $GITHUB_PATH
+    run: |
+      curl -fsSL https://bun.sh/install | bash
+      echo "$HOME/.bun/bin" >> $GITHUB_PATH
 
       - name: Install Tauri Dependencies
         run: |
