@@ -1,0 +1,44 @@
+name: Build Tauri Windows App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest # Uses Windows runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install Node.js, pnpm, and Dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install -g pnpm
+      - run: pnpm install
+
+      - name: Install Tauri Dependencies
+        run: |
+          choco install -y nsis wix vcredist-all
+          rustup target add x86_64-pc-windows-msvc
+
+      - name: Build Tauri App
+        run: pnpm tauri build
+
+      - name: Upload Artifact (Windows Build)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows-app
+          path: src-tauri/target/release/bundle/msi/*.msi
