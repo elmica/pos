@@ -1,34 +1,49 @@
- steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+name: Build Tauri Windows App
 
-  - name: Setup Rust
-    uses: dtolnay/rust-toolchain@stable
-    with:
-      targets: x86_64-pc-windows-msvc
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger
 
-  - name: Install Node.js, pnpm, and Dependencies
-    uses: actions/setup-node@v4
-    with:
-      node-version: 18
-  - run: npm install -g pnpm
-  - run: pnpm install
+jobs:
+  build-windows:
+    runs-on: windows-latest # Uses Windows runner
 
-  - name: Install Bun
-    run: |
-      curl -fsSL https://bun.sh/install | bash
-      echo "$HOME/.bun/bin" >> $GITHUB_PATH
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Install Tauri Dependencies
-    run: |
-      choco install -y nsis wix vcredist-all
-      rustup target add x86_64-pc-windows-msvc
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
 
-  - name: Build Tauri App
-    run: pnpm tauri build
+      - name: Install Node.js, pnpm, and Dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install -g pnpm
+      - run: pnpm install
 
-  - name: Upload Artifact (Windows Build)
-    uses: actions/upload-artifact@v4
-    with:
-      name: tauri-windows-app
-      path: src-tauri/target/release/bundle/msi/*.msi
+      - name: Install bun
+      - run: |
+        curl -fsSL https://bun.sh/install | bash
+        echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Install Tauri Dependencies
+        run: |
+          choco install -y nsis wix vcredist-all
+          rustup target add x86_64-pc-windows-msvc
+
+      - name: Build Tauri App
+        run: pnpm tauri build
+
+      - name: Upload Artifact (Windows Build)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows-app
+          path: src-tauri/target/release/bundle/msi/*.msi
