@@ -4,7 +4,7 @@
 	import PrinterSelect from './PrinterSelect.svelte';
 	import FolderListener from './FolderListener.svelte';
 	import PrintTest from './PrintTest.svelte';
-	//receipt_homeadf
+	//receipt_homeadaaf
 </script>
 
 <div class="bg-base-200 min-h-screen p-3">
