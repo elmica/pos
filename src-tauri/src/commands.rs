@@ -27,6 +27,19 @@ pub fn print_base64(printer_name: &str, b64_string: &str) -> String {
     }
 }
 
+#[tauri::command(rename_all = "snake_case")]
+pub fn print_file(printer_name: &str, filepath: &str) -> String {
+    let printer = printers::get_printer_by_name(printer_name);
+    if printer.is_some() {
+        let result = printer.unwrap().print_file(&filepath, Some("CHS printjob"));
+        let res_string = format!("Printed, I think: {:?}", result);
+        return String::from(res_string);
+    } else {
+        return String::from("Cant find the printer...");
+    }
+}
+
+
 #[tauri::command]
 pub fn list_printers() -> Vec<String> {
     let printer_array = printers::get_printers();

@@ -25,6 +25,16 @@ export async function printb64(printer: string, data: string) {
 	return printResult;
 }
 
+export async function printFile(printer: string, filePath: string) {
+	let printResult = await invoke<string>('print_file', {
+		printer_name: printer,
+		filepath: filePath
+	});
+
+	console.log(printResult);
+	return printResult;
+}
+
 export async function printerTest(printer: string, printerType: string) {
 	console.log('printer test');
 

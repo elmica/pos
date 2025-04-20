@@ -17,6 +17,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            print_file,
             greet,
             list_printers,
             print_base64,
